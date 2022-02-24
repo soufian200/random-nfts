@@ -2,18 +2,20 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import { FiChevronDown, FiChevronUp, FiLayers } from 'react-icons/fi'
 import { FiRefreshCw } from 'react-icons/fi'
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import Image from 'next/image'
 import Layer from '../components/Layer'
 import Input from '../components/Input'
 import Preview from '../components/Preview'
 import Navbar from '../components/Navbar'
 import Overlay from '../components/Overlay'
+import { AppContext } from '../context/AppContext'
 
 const Home: NextPage = () => {
 
   const [opened, setOpened] = useState(!false)
-  const [overlayVisible, setOverlayVisible] = useState(false)
+
+  const { overlayVisible, setOverlayVisible } = useContext(AppContext)
 
 
   const [layers, setLayers] = useState([
