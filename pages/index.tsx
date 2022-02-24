@@ -7,6 +7,7 @@ import Image from 'next/image'
 import Layer from '../components/Layer'
 import Input from '../components/Input'
 import Preview from '../components/Preview'
+import Navbar from '../components/Navbar'
 
 const Home: NextPage = () => {
 
@@ -110,15 +111,7 @@ const Home: NextPage = () => {
       <link rel="icon" href="/favicon.ico" />
     </Head>
     <main className=''>
-      <nav className='bg-slate-900 border-b border-slate-600 py-3 px-20 flex items-center justify-between w-full'>
-        <div>
-          <h1 className='font-bold text-3xl text-white'>NFTs Generator</h1>
-        </div>
-        <div className=''>
-          <a href="#" className='text-blue-500 hover:text-blue-600'>Buy A Coffee</a>
-        </div>
-      </nav>
-
+      <Navbar />
       <div className="  text-white flex w-full ">
         <div className='bg-slate-80 w-2/5 p-5 pb-20 h-screen  overflow-auto' >
           <div className=' mx-auto  max-w-xl  '>
