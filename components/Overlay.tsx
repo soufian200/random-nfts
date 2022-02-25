@@ -1,9 +1,55 @@
 import Preview from "./Preview";
 import { AiFillCheckCircle, AiOutlineClose, AiOutlineDownload } from 'react-icons/ai'
 import { FiDownload } from "react-icons/fi";
-import { useState } from "react";
-const Overlay = ({ setOverlayVisible }) => {
+import { useContext, useEffect, useState } from "react";
+import { AppContext } from "../context/AppContext";
+import ArtGenerator from "../lib/classes/ArtGenerator";
+
+type OverlayType = {
+    setOverlayVisible: (val: boolean) => void
+}
+
+const Overlay = ({ setOverlayVisible }: OverlayType) => {
     const [done, setDone] = useState(false)
+
+    const { layers } = useContext(AppContext)
+
+    useEffect(() => {
+
+        /**
+         * 
+         * Handle Generate
+         * Here Where All The Magic Happen
+         */
+        const handleGenerate = async () => {
+
+            try {
+
+                // const { width, height, collectionName, ipfs, description, size } = initialValues;
+                // intantiate ArtGenerator obj
+                const artGenerator = new ArtGenerator(
+                    512,
+                    512,
+                    "collectionName",
+                    "ipfs",
+                    "description",
+                    layers)
+                const ouputResult = await artGenerator.generate(5)
+
+                console.log(ouputResult)
+                // Go to next step
+                // setCrrStep(crrStep + 1)
+
+            } catch (err) {
+                // const Sentry = (await import("@sentry/nextjs")).default
+                // Sentry.captureException(err)
+
+                console.log(err)
+            }
+        }
+        // handleGenerate()
+
+    }, [])
     return <div className="bg-[#222222ef]  fixed w-screen h-screen top-0 left-0 z-50 flex justify-center items-center">
         <div className="bg-slate-50 rounded-xl shadow-2xl w-[600px] " >
             <div>

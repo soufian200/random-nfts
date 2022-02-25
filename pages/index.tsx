@@ -2,111 +2,57 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import { FiChevronDown, FiChevronUp, FiLayers } from 'react-icons/fi'
 import { FiRefreshCw } from 'react-icons/fi'
-import { useContext, useState } from 'react'
-import Image from 'next/image'
-import Layer from '../components/Layer'
+import { ChangeEvent, useContext, useState } from 'react'
+import Layer, { LayerType } from '../components/Layer'
 import Input from '../components/Input'
 import Preview from '../components/Preview'
 import Navbar from '../components/Navbar'
 import Overlay from '../components/Overlay'
 import { AppContext } from '../context/AppContext'
+import { AiOutlinePlus } from 'react-icons/ai'
+import { DndProvider } from 'react-dnd'
+import { HTML5Backend } from 'react-dnd-html5-backend'
+import { Container } from '../components/Container'
+
+
 
 const Home: NextPage = () => {
 
   const [opened, setOpened] = useState(!false)
+  const { overlayVisible, setOverlayVisible, layers, setLayers } = useContext(AppContext)
+  const [newLayerFormVisible, setNewLayerFormVisible] = useState(false)
+  const [layerName, setLayerName] = useState('')
 
-  const { overlayVisible, setOverlayVisible } = useContext(AppContext)
+
+  const handleNewLayer = () => {
+
+    setNewLayerFormVisible(!newLayerFormVisible)
+  }
 
 
-  const [layers, setLayers] = useState([
-    {
-      name: "Backgrounds",
-      items: [
-        {
-          name: "1",
-          src: '/layers/backgrounds/1.jpeg',
+  const handleSave = () => {
 
-        },
-        {
-          name: "2",
-          src: '/layers/backgrounds/2.jpeg',
+    if (!layerName) return;
 
-        },
-        {
-          name: "1",
-          src: '/layers/backgrounds/1.jpeg',
+    /** @returns random number */
+    const getRandomId = () => Math.floor(Math.random() * 10000);
 
-        },
-        {
-          name: "2",
-          src: '/layers/backgrounds/2.jpeg',
+    setLayers([...layers, { id: getRandomId(), folderName: layerName, imgs: [] }])
+    setNewLayerFormVisible(false)
+    setLayerName('')
+  }
 
-        },
-        {
-          name: "1",
-          src: '/layers/backgrounds/1.jpeg',
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setLayerName(e.target.value)
+  }
 
-        },
-        {
-          name: "2",
-          src: '/layers/backgrounds/2.jpeg',
+  const handleCreate = () => {
+    console.log(layers)
+    setOverlayVisible(true)
+  }
 
-        },
-        {
-          name: "1",
-          src: '/layers/backgrounds/1.jpeg',
 
-        },
-        {
-          name: "2",
-          src: '/layers/backgrounds/2.jpeg',
 
-        },
-      ]
-    },
-    {
-      name: "Eyes",
-      items: [
-        {
-          name: "1",
-          src: '/layers/backgrounds/1.jpeg'
-        },
-        {
-          name: "2",
-          src: '/layers/backgrounds/2.jpeg'
-        },
-        {
-          name: "1",
-          src: '/layers/backgrounds/1.jpeg'
-        },
-        {
-          name: "2",
-          src: '/layers/backgrounds/2.jpeg'
-        },
-      ]
-    },
-    {
-      name: "Heads",
-      items: [
-        {
-          name: "1",
-          src: '/layers/backgrounds/1.jpeg'
-        },
-        {
-          name: "2",
-          src: '/layers/backgrounds/2.jpeg'
-        },
-        {
-          name: "1",
-          src: '/layers/backgrounds/1.jpeg'
-        },
-        {
-          name: "2",
-          src: '/layers/backgrounds/2.jpeg'
-        },
-      ]
-    },
-  ])
 
 
   return <div className='bg-slate-900 h-screen overflow-hidden' >
@@ -119,7 +65,7 @@ const Home: NextPage = () => {
       {overlayVisible && <Overlay setOverlayVisible={setOverlayVisible} />}
       <Navbar />
       <div className="  text-white flex w-full ">
-        <div className='bg-slate-80 w-2/5 p-5 pb-20 h-screen  overflow-auto' >
+        <div className=' w-2/5 p-5 pb-20 h-screen  overflow-auto' >
           <div className=' mx-auto  max-w-xl  '>
             <div className=''>
               <div className=' flex justify-center '>
@@ -163,7 +109,7 @@ const Home: NextPage = () => {
                 </div>
                 <div className='flex justify-center mt-8'>
                   <button
-                    onClick={() => setOverlayVisible(true)}
+                    onClick={handleCreate}
                     className='bg-yellow-400 hover:bg-yellow-500 py-3 px-20 rounded-md text-slate-900 font-bold'>
                     Create</button>
                 </div>
@@ -172,16 +118,55 @@ const Home: NextPage = () => {
 
           </div>
         </div>
-        <div className='bg-slate-800 w-3/5 p-4 pb-20 h-screen overflow-auto' >
-          <div className='flex items-center mb-6'>
-            <FiLayers size={30} />
-            <h1 className='text-2xl font-bold ml-2'>Layers</h1>
+        <div className='bg-slate-800 w-3/5 p-4 px-5 pb-20 h-screen overflow-auto' >
+          <div className='flex items-center justify-between mb-6'>
+            <div className='flex items-center'>
+              <FiLayers size={30} />
+              <h1 className='text-2xl font-bold ml-2'>Layers</h1>
+            </div>
+            <div className='relative'>
+              <div
+                onClick={handleNewLayer}
+                className='bg-slate-600 hover:bg-slate-700 cursor-pointer flex items-center p-2 rounded-md'
+              >
+                <AiOutlinePlus size={25} />
+                <h1 className='ml-1'>New Layer</h1>
+              </div>
+              {
+                newLayerFormVisible && <div className={`z-50 transition bg-slate-600 p-2 absolute right-0 top-0 w-[220px] rounded-md shadow-md`}>
+                  <Input
+                    placeholder='Layer Name'
+                    name="layerName"
+                    styles='w-full'
+                    value={layerName}
+                    onChange={handleChange}
+                  />
+                  <button
+                    onClick={handleSave}
+                    className='bg-yellow-400 hover:bg-yellow-500 p-2 py-3 text-slate-900 w-full rounded-md'>Save</button>
+                  <button
+                    onClick={() => setNewLayerFormVisible(false)}
+                    className='bg-slate-200 hover:bg-slate-300 p-2 py-3 text-slate-900 w-full rounded-md mt-1'>Cancel</button>
+                </div>
+              }
+            </div>
           </div>
-          {
-            layers.map((layer, index) => {
-              return <Layer key={index} layer={layer} />
-            })
-          }
+
+          <div className="">
+            <DndProvider backend={HTML5Backend}>
+              <Container />
+            </DndProvider>
+          </div>
+
+          {/* {
+            layers.length === 0
+              ? <div className={`bg-slate-700 px-3 py-5 flex justify-center items-center rounded-lg`}>
+                <h1 className='text-slate-400' >No Layers Here !</h1>
+              </div>
+              : layers.map((layer: LayerType, index: number) => {
+                return <Layer key={index} layer={layer} />
+              })
+          } */}
         </div>
       </div>
     </main>
