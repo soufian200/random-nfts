@@ -20,10 +20,10 @@ function shuffle(array: number[]) {
 class ArtGenerator {
 
 
-    private rarityDelimiter = "#";
-    private DNA_DELIMITER = "-";
-    private maxFailedCount = 10000;
-    private text = {
+    public rarityDelimiter = "#";
+    public DNA_DELIMITER = "-";
+    public maxFailedCount = 10000;
+    public text = {
         only: false,
         color: "#ffffff",
         size: 20,
@@ -36,7 +36,7 @@ class ArtGenerator {
         spacer: " => ",
     };
 
-    private solanaMetadata = {
+    public solanaMetadata = {
         symbol: "YC",
         seller_fee_basis_points: 1000, // Define how much % you want from secondary market sales 1000 = 10%
         // external_url: "https://www.youtube.com/c/hashlipsnft",
@@ -48,25 +48,25 @@ class ArtGenerator {
         ],
     };
 
-    private extraMetadata = {};
+    public extraMetadata = {};
 
-    private height;
-    private width;
-    private collectionName;
-    private ipfs;
-    private description;
-    private layers;
-    private shuffleLayers;
-    private network;
-    private backgroundOption;
+    public height;
+    public width;
+    public collectionName;
+    public ipfs;
+    public description;
+    public layers;
+    public shuffleLayers;
+    public network;
+    public backgroundOption;
 
 
-    private canvas;
-    private ctx;
+    public canvas;
+    public ctx;
 
-    private abstractedIndexes: number[] = [];
-    private attributesList: AttributeListInterface[] = [];
-    private metadataList: any = [];
+    public abstractedIndexes: number[] = [];
+    public attributesList: AttributeListInterface[] = [];
+    public metadataList: any = [];
 
 
     constructor(
@@ -111,7 +111,7 @@ class ArtGenerator {
 
     }
 
-    private getAbstractedIndexes(_size: number) {
+    public getAbstractedIndexes(_size: number) {
         const indexes: number[] = [];
         for (
             let i = (this.network == 'sol') ? 0 : 1;
@@ -126,12 +126,12 @@ class ArtGenerator {
     /**
     * get filename without extension
     * */
-    private cleanName = (_str: string) => _str.split(this.rarityDelimiter)[0];
+    public cleanName = (_str: string) => _str.split(this.rarityDelimiter)[0];
     /**
      * 
      * Get Rarity Weight
      * */
-    private getRarityWeight = (_str: string) => { // e.g yellow#12.png => 12
+    public getRarityWeight = (_str: string) => { // e.g yellow#12.png => 12
 
         let nameWithoutExtension = _str.slice(0, -4);
         const poped = nameWithoutExtension.split(this.rarityDelimiter).pop()
@@ -143,7 +143,7 @@ class ArtGenerator {
      * 
      * getElements
      * */
-    private getElements = (imgs: File[]) => {
+    public getElements = (imgs: File[]) => {
 
 
         return imgs.map((img: File, index: number) => {
@@ -160,7 +160,7 @@ class ArtGenerator {
      * 
      * layersSetup
      * */
-    private layersSetup = (_layers: LayerInterface[]) => {
+    public layersSetup = (_layers: LayerInterface[]) => {
 
         const layers = _layers.map((layerObj, index: number) => ({
             id: index,
@@ -184,7 +184,7 @@ class ArtGenerator {
      * 
      * Create Dna
      * */
-    private createDna = (_layers: LayersInterface[]): string => {
+    public createDna = (_layers: LayersInterface[]): string => {
 
         let randNum: string[] = [];
 
@@ -215,19 +215,19 @@ class ArtGenerator {
      * is Dna Unique
      * */
 
-    private isDnaUnique = (_DnaList = new Set(), _dna = "") => !_DnaList.has(_dna);
+    public isDnaUnique = (_DnaList = new Set(), _dna = "") => !_DnaList.has(_dna);
     /**
      * 
     * cleanDna
     * */
 
-    private cleanDna = (_str: string) => Number(_str.split(":").shift());
+    public cleanDna = (_str: string) => Number(_str.split(":").shift());
     /**
      * 
      * construct Layer To Dna
      * */
 
-    private constructLayerToDna = (_dna: string = "", _layers: LayersInterface[] = []): ConstructLayerInterface[] => {
+    public constructLayerToDna = (_dna: string = "", _layers: LayersInterface[] = []): ConstructLayerInterface[] => {
 
         let mappedDnaToLayers = _layers.map((layer, index) => {
 
@@ -244,7 +244,7 @@ class ArtGenerator {
 
 
 
-    private toBase64 = (file: File) => new Promise((resolve, reject) => {
+    public toBase64 = (file: File) => new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onload = () => resolve(reader.result);
@@ -254,7 +254,7 @@ class ArtGenerator {
     /**
     * Load Layer Image
     * */
-    private loadLayerImg = async (_layer: ConstructLayerInterface) => {
+    public loadLayerImg = async (_layer: ConstructLayerInterface) => {
 
         return new Promise(async (resolve) => {
             const path = await this.toBase64(_layer.selectedElement?.file as File)
@@ -268,7 +268,7 @@ class ArtGenerator {
     /**
      * Generate Color
      * */
-    private genColor = () => {
+    public genColor = () => {
         let hue = Math.floor(Math.random() * 360);
         let pastel = `hsl(${hue}, 100%, ${this.backgroundOption.brightness})`;
         return pastel;
@@ -279,7 +279,7 @@ class ArtGenerator {
     /**
      * draw Background
      * */
-    private drawBackground = () => {
+    public drawBackground = () => {
         this.ctx.fillStyle = this.backgroundOption.static ? this.backgroundOption.default : this.genColor();
         this.ctx.fillRect(0, 0, this.width, this.height);
     };
@@ -288,7 +288,7 @@ class ArtGenerator {
     /**
      * Add Text
      * */
-    private addText = (_sig: string, x: number, y: number, size: number) => {
+    public addText = (_sig: string, x: number, y: number, size: number) => {
 
         const { color, baseline, align, weight } = this.text;
 
@@ -307,7 +307,7 @@ class ArtGenerator {
     /**
      * Add Attributes
      * */
-    private addAttributes = (_element: any) => {
+    public addAttributes = (_element: any) => {
 
         let selectedElement = _element.layer.selectedElement;
 
@@ -322,7 +322,7 @@ class ArtGenerator {
     /**
      * Draw Background
      * */
-    private drawElement = (_renderObject: RenderObjectInterface, _index: number, _layersLen: number) => {
+    public drawElement = (_renderObject: RenderObjectInterface, _index: number, _layersLen: number) => {
 
         const { xGap, yGap, size, spacer } = this.text;
 
@@ -351,7 +351,7 @@ class ArtGenerator {
     /**
      * Get Buffer Image
      * */
-    private getBufferImage = (_editionCount: number) => {
+    public getBufferImage = (_editionCount: number) => {
 
         return this.canvas.toBuffer("image/png")
     }
@@ -362,7 +362,7 @@ class ArtGenerator {
     /**
      * Add Metadata
      * */
-    private addMetadata = (_dna: string, _edition: number, namePrefix: string, description: string) => {
+    public addMetadata = (_dna: string, _edition: number, namePrefix: string, description: string) => {
 
         // time
         let dateTime = Date.now();
@@ -419,7 +419,7 @@ class ArtGenerator {
     /**
      * save MetaData Single File
      * */
-    private saveMetaDataSingleFile = (_editionCount: number) => {
+    public saveMetaDataSingleFile = (_editionCount: number) => {
 
         let metadata = this.metadataList.find((meta: any) => meta.edition == _editionCount);
         return JSON.stringify(metadata, null, 2)
@@ -430,119 +430,7 @@ class ArtGenerator {
 
 
 
-    async generate(_size: number) {
 
-        let editionCount = 1;
-        let failedCount = 0;
-        let dnaList = new Set();
-        const imgsBuffer: any[] = []
-        const allSingleMetaData: string[] = []
-
-
-
-        // get an array of number e.g 4 => [1,2,3,4]
-        this.abstractedIndexes = this.getAbstractedIndexes(_size);
-
-        // shuffle abstractedIndexes
-        if (this.shuffleLayers)
-            this.abstractedIndexes = shuffle(this.abstractedIndexes);
-
-
-        // setup layer
-        const layers = this.layersSetup(this.layers);
-
-
-
-        while (editionCount <= _size) {
-
-            let newDna: string = this.createDna(layers);
-
-            if (this.isDnaUnique(dnaList, newDna)) {
-
-                let results: ConstructLayerInterface[] = this.constructLayerToDna(newDna, layers);
-                let loadedElements: Promise<any>[] = [];
-                results.forEach((layer) => {
-
-                    loadedElements.push(this.loadLayerImg(layer));
-                });
-
-
-                await Promise.all(loadedElements).then((renderObjectArray) => {
-
-                    //for debuging
-                    // debugLogs ? console.log("Clearing canvas") : null;
-
-                    // clean rectangle
-                    this.ctx.clearRect(0, 0, this.width, this.height);
-
-                    // if (gif.export) {
-                    //   hashlipsGiffer = new HashlipsGiffer(
-                    //     canvas,
-                    //     ctx,
-                    //     `${buildDir}/gifs/${abstractedIndexes[0]}.gif`,
-                    //     gif.repeat,
-                    //     gif.quality,
-                    //     gif.delay
-                    //   );
-                    //   hashlipsGiffer.start();
-                    // }
-
-                    if (this.backgroundOption.generate)
-                        this.drawBackground();
-
-
-                    renderObjectArray.forEach((renderObject, index) => {
-
-                        this.drawElement(renderObject, index, this.layers.length);
-
-                        // if (gif.export)
-                        //     hashlipsGiffer.add();
-
-                    });
-
-                    // if (gif.export) hashlipsGiffer.stop();
-
-
-                    // debugLogs
-                    //     ? console.log("Editions left to create: ", abstractedIndexes)
-                    //     : null;
-                    // const imgBuffer = this.getBufferImage(this.abstractedIndexes[0]);
-                    // console.log(this.canvas)
-                    imgsBuffer.push(this.canvas.toDataURL())
-                    // imgsBuffer.push(imgBuffer)
-
-
-                    this.addMetadata(newDna, this.abstractedIndexes[0], this.collectionName, this.description);
-                    const singleMetaData = this.saveMetaDataSingleFile(this.abstractedIndexes[0]);
-
-                    allSingleMetaData.push(singleMetaData)
-
-                    // console.log(`Created edition: ${this.abstractedIndexes[0]}, with DNA: ${sha1(newDna)}`);
-                });
-
-
-                dnaList.add(newDna);
-                editionCount++;
-                this.abstractedIndexes.shift();
-            }
-            else {
-                // console.log("DNA exists!");
-                failedCount++;
-                if (failedCount >= this.maxFailedCount)
-                    break;
-
-            }
-
-
-
-        }
-
-        return {
-            images: imgsBuffer,
-            metadataList: JSON.stringify(this.metadataList, null, 2),
-            jsonFiles: allSingleMetaData
-        };
-    }
 
 
 

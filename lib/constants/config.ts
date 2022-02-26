@@ -1,0 +1,5 @@
+export const ROOT_DIR = 'layers'
+export const IMGS_DIR = 'images'
+export const JSON_DIR = 'json'
+export const METADATA = '_metadata'
+export const WALLET_ADDRESS = '0x1b01818C0DD9f37BF9B9A52F35D10e9f7f981261'

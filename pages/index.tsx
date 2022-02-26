@@ -19,10 +19,15 @@ import { Container } from '../components/Container'
 const Home: NextPage = () => {
 
   const [opened, setOpened] = useState(!false)
-  const { overlayVisible, setOverlayVisible, layers, setLayers } = useContext(AppContext)
+  const { overlayVisible, setOverlayVisible, layers, setLayers, setRefresh, refresh } = useContext(AppContext)
   const [newLayerFormVisible, setNewLayerFormVisible] = useState(false)
   const [layerName, setLayerName] = useState('')
 
+
+  const handleRefresh = () => {
+    if (!layers.length) return
+    setRefresh(!refresh)
+  }
 
   const handleNewLayer = () => {
 
@@ -47,7 +52,7 @@ const Home: NextPage = () => {
   }
 
   const handleCreate = () => {
-    console.log(layers)
+    if (!layers.length) return
     setOverlayVisible(true)
   }
 
@@ -71,12 +76,14 @@ const Home: NextPage = () => {
               <div className=' flex justify-center '>
                 <div>
                   <Preview src='/layers/backgrounds/1.jpeg' />
-                  <div className='mt-3 flex justify-between '>
+                  <div className='mt-3 flex justify-between  '>
                     <div className=' flex   '>
                       <Input name='width' placeholder='Width' styles='mb-0 mr-3 w-[80px]' />
                       <Input name='height' placeholder='Height' styles='mb-0 w-[80px]' />
                     </div>
-                    <button title='Random Preview' className='bg-blue-400 hover:bg-blue-500 py-3 px-4 rounded-md text-slate-900 font-bold'>
+                    <button
+                      onClick={handleRefresh}
+                      title='Random Preview' className='active:scale-95 bg-blue-400 hover:bg-blue-500  flex justify-center items-center p-2 w-12 h-12 rounded-md text-slate-900 font-bold'>
                       <FiRefreshCw size={26} />
                     </button>
                   </div>
@@ -109,8 +116,9 @@ const Home: NextPage = () => {
                 </div>
                 <div className='flex justify-center mt-8'>
                   <button
+                    disabled={layers.length === 0}
                     onClick={handleCreate}
-                    className='bg-yellow-400 hover:bg-yellow-500 py-3 px-20 rounded-md text-slate-900 font-bold'>
+                    className={` bg-yellow-400 hover:bg-yellow-500 py-3 px-20 rounded-md text-slate-900 font-bold`}>
                     Create</button>
                 </div>
               </div>
@@ -153,20 +161,17 @@ const Home: NextPage = () => {
           </div>
 
           <div className="">
-            <DndProvider backend={HTML5Backend}>
-              <Container />
-            </DndProvider>
-          </div>
+            {
+              layers.length === 0
+                ? <div className={`bg-slate-700 px-3 py-5 flex justify-center items-center rounded-lg`}>
+                  <h1 className='text-slate-400' >No Layers Here !</h1>
+                </div>
+                : <DndProvider backend={HTML5Backend}>
+                  <Container />
+                </DndProvider>
+            }
 
-          {/* {
-            layers.length === 0
-              ? <div className={`bg-slate-700 px-3 py-5 flex justify-center items-center rounded-lg`}>
-                <h1 className='text-slate-400' >No Layers Here !</h1>
-              </div>
-              : layers.map((layer: LayerType, index: number) => {
-                return <Layer key={index} layer={layer} />
-              })
-          } */}
+          </div>
         </div>
       </div>
     </main>

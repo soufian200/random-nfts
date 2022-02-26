@@ -117,7 +117,7 @@ const Layer = ({ layer, index, moveCard }: { layer: LayerType, index: number, mo
 
     return <div
 
-        className={`  mb-4  overflow-hidden rounded-lg hover:cursor-move group bg-[#3c495c]  `}
+        className={`  mb-4  overflow-hidden rounded-lg hover:cursor-move  bg-[#3c495c]  `}
 
     >
         <div
