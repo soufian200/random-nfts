@@ -28,13 +28,6 @@ const Home: NextPage = () => {
     setRefresh(!refresh)
   }
 
-
-
-
-
-
-
-
   const handleCreate = () => {
     if (!layers.length) return
 
