@@ -5,7 +5,6 @@ import { getRandomNumber } from '../../../services/firebase/utils/getRandomNumbe
 import { withSentry } from '@sentry/nextjs';
 
 type Data = {
-    success?: true
     err?: string
     msg?: string
     payload?: any
@@ -62,7 +61,13 @@ async function handler(
     db.collection("stats").doc("collections").set({ count: newCount + size })
 
     res.status(200).json({
-        success: true
+        msg: `${collectionName} collection generated with ${size} assets`,
+        payload: {
+            collectionName: data.collectionName,
+            size: data.size,
+            createdAt: data.createdAt,
+            description: data.description
+        }
     })
 }
-export default withSentry(handler);
+export default handler;
