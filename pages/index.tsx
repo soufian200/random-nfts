@@ -89,7 +89,7 @@ const Home: NextPage = () => {
             <div className=''>
               <div className=' flex justify-center '>
                 <div>
-                  <Preview src='/layers/backgrounds/1.jpeg' />
+                  <Preview />
                   <div className='mt-3 flex justify-between  '>
                     <div className=' flex   '>
                       <Input onChange={handleChangeInput} value={formData['width']} name='width' placeholder='Width' styles='mb-0 mr-3 w-[80px]' />

@@ -2,10 +2,8 @@ import Image from "next/image";
 import { useContext, useEffect, useState } from "react";
 import { BsImage } from "react-icons/bs";
 import { AppContext } from "../context/AppContext";
-import ArtGenerator from "../lib/classes/ArtGenerator";
-import shuffle from "../lib/utils/shuffle";
 
-const Preview = ({ src }: { src: string }) => {
+const Preview = () => {
 
     const { layers, generate, refresh } = useContext(AppContext)
     const [url, setUrl] = useState('')
@@ -20,6 +18,7 @@ const Preview = ({ src }: { src: string }) => {
         }
         if (layers.length && layers[0].imgs.length)
             handleGenerate()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [layers, refresh])
 
 
@@ -28,6 +27,7 @@ const Preview = ({ src }: { src: string }) => {
         <div className='bg-slate-500 h-[340px] w-[340px] rounded-md flex-none overflow-hidden'>
             {
                 url ? <Image
+                    alt="Preview"
                     width="100%"
                     height="100%"
                     layout='responsive'

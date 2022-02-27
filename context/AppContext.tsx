@@ -18,7 +18,7 @@ type AppContextType = {
     setOverlayVisible: (val: boolean) => void
 
     layers: LayerType[]
-    setLayers: (vals: LayerType[]) => void
+    setLayers: (vals: any) => void
 
     count: number
     setCount: (val: number) => void

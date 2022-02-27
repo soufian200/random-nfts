@@ -86,26 +86,14 @@ const Overlay = ({ setOverlayVisible }: OverlayType) => {
          */
         const handleGenerate = async () => {
 
-
             try {
 
-                // const { width, height, collectionName, ipfs, description, size } = initialValues;
-                // intantiate ArtGenerator obj
                 setDone(false)
 
                 const ouputResult = await generate(Number(size))
 
-                // ===========================================
-
-
-
-
                 setOuput(ouputResult)
                 setDone(true)
-
-                console.log("ouputResult: ", ouputResult)
-                // Go to next step
-                // setCrrStep(crrStep + 1)
 
             } catch (err) {
                 // const Sentry = (await import("@sentry/nextjs")).default
@@ -117,6 +105,7 @@ const Overlay = ({ setOverlayVisible }: OverlayType) => {
         if (!Object.keys(output).length)
             handleGenerate()
 
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
     return <div className="bg-[#222222ef]  fixed w-screen h-screen top-0 left-0 z-50 flex justify-center items-center">
         <div className="bg-slate-50 rounded-xl shadow-2xl w-[600px] " >

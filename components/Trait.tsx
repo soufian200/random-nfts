@@ -22,6 +22,7 @@ const Trait = ({ file, layerName }: { file: File, layerName: string }) => {
 
     useEffect(() => {
         setUrl(URL.createObjectURL(file))
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [layers])
 
     return <div className='mb-2 relative select-none group cursor-pointer '>
@@ -32,6 +33,7 @@ const Trait = ({ file, layerName }: { file: File, layerName: string }) => {
                     height="100%"
                     layout='responsive'
                     src={url}
+                    alt="Trait"
                 />
             }
             <div

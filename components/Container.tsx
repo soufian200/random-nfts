@@ -19,14 +19,16 @@ export const Container: FC = () => {
 
 
     const moveCard = useCallback((dragIndex: number, hoverIndex: number) => {
-        setLayers((prevCards: LayerType[]) => {
+
+        setLayers((prevCards: any) => {
             return update(prevCards, {
                 $splice: [
                     [dragIndex, 1],
-                    [hoverIndex, 0, prevCards[dragIndex] as LayerType],
+                    [hoverIndex, 0, prevCards[dragIndex] as any],
                 ],
             })
         })
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
 
@@ -40,9 +42,8 @@ export const Container: FC = () => {
                 index={index}
                 moveCard={moveCard}
             />
-
-        },
-        [],
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+        }, [],
     )
 
 

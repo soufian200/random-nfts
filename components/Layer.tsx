@@ -112,6 +112,7 @@ const Layer = ({ layer, index, moveCard }: { layer: LayerType, index: number, mo
 
     useEffect(() => {
         drag(drop(ref))
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
 
