@@ -3,6 +3,16 @@ import { LayerType } from "../components/Layer";
 import ArtGenerator from "../lib/classes/ArtGenerator";
 import shuffle from "../lib/utils/shuffle";
 
+
+type FormDataType = {
+    width: number
+    height: number
+    collectionName: string
+    ipfs: string
+    description: string
+    size: number
+}
+
 type AppContextType = {
     overlayVisible: boolean
     setOverlayVisible: (val: boolean) => void
@@ -17,6 +27,9 @@ type AppContextType = {
     setRefresh: (val: boolean) => void
 
     generate: any
+
+    formData: FormDataType
+    setFormData: (val: FormDataType) => void
 }
 export const AppContext = createContext<AppContextType>({} as AppContextType);
 
@@ -26,15 +39,25 @@ const AppProvider = ({ children }: { children: ReactChild }) => {
     const [layers, setLayers] = useState<LayerType[]>([])
     const [count, setCount] = useState(0)
     const [refresh, setRefresh] = useState(false)
+    const [formData, setFormData] = useState({
+        width: 512,
+        height: 512,
+        collectionName: '',
+        ipfs: '',
+        description: '',
+        size: 1
+    })
 
     const generate = async (_size: number) => {
 
+        const { width, height, collectionName, ipfs, description } = formData
+
         const artGenerator = new ArtGenerator(
-            512,
-            512,
-            "collectionName",
-            "ipfs",
-            "description",
+            Number(width),
+            Number(height),
+            collectionName,
+            ipfs,
+            description,
             layers.filter(i => i.imgs.length > 0))
 
 
@@ -145,7 +168,11 @@ const AppProvider = ({ children }: { children: ReactChild }) => {
         refresh,
         setRefresh,
 
-        generate
+        generate,
+
+        formData,
+        setFormData
+
     }}>
         {children}
     </AppContext.Provider>

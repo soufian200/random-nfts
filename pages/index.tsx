@@ -9,7 +9,7 @@ import Preview from '../components/Preview'
 import Navbar from '../components/Navbar'
 import Overlay from '../components/Overlay'
 import { AppContext } from '../context/AppContext'
-import { AiOutlinePlus } from 'react-icons/ai'
+import { AiFillWarning, AiOutlinePlus } from 'react-icons/ai'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import { Container } from '../components/Container'
@@ -19,9 +19,10 @@ import { Container } from '../components/Container'
 const Home: NextPage = () => {
 
   const [opened, setOpened] = useState(!false)
-  const { overlayVisible, setOverlayVisible, layers, setLayers, setRefresh, refresh } = useContext(AppContext)
+  const { overlayVisible, setOverlayVisible, layers, setLayers, setRefresh, refresh, formData, setFormData } = useContext(AppContext)
   const [newLayerFormVisible, setNewLayerFormVisible] = useState(false)
   const [layerName, setLayerName] = useState('')
+  const [err, setErr] = useState('')
 
 
   const handleRefresh = () => {
@@ -53,9 +54,31 @@ const Home: NextPage = () => {
 
   const handleCreate = () => {
     if (!layers.length) return
+
+    const { width, height, collectionName, description, size } = formData;
+    if (!Number(width)) return setErr("Width Not Valid")
+    else if (!Number(height)) return setErr("Height Not Valid")
+    else if (!collectionName) return setErr("Collection Name Not Valid")
+    else if (!description) return setErr("Description Not Valid")
+    else if (!Number(size)) return setErr("Size Not Valid")
+
+
+    setErr("") // hide err
+
     setOverlayVisible(true)
   }
 
+  const handleChangeInput = (e: ChangeEvent<HTMLInputElement>, name: string) => {
+    setFormData({ ...formData, [name]: e.target.value })
+  }
+
+  const handleChangeFormData = (e: ChangeEvent<HTMLInputElement>, name: string) => {
+    setFormData({ ...formData, [name]: e.target.value })
+  }
+
+  const handleTextAreaChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    setFormData({ ...formData, description: e.target.value })
+  }
 
 
 
@@ -78,12 +101,12 @@ const Home: NextPage = () => {
                   <Preview src='/layers/backgrounds/1.jpeg' />
                   <div className='mt-3 flex justify-between  '>
                     <div className=' flex   '>
-                      <Input name='width' placeholder='Width' styles='mb-0 mr-3 w-[80px]' />
-                      <Input name='height' placeholder='Height' styles='mb-0 w-[80px]' />
+                      <Input onChange={handleChangeInput} value={formData['width']} name='width' placeholder='Width' styles='mb-0 mr-3 w-[80px]' />
+                      <Input onChange={handleChangeInput} value={formData['height']} name='height' placeholder='Height' styles='mb-0 w-[80px]' />
                     </div>
                     <button
                       onClick={handleRefresh}
-                      title='Random Preview' className='active:scale-95 bg-blue-400 hover:bg-blue-500  flex justify-center items-center p-2 w-12 h-12 rounded-md text-slate-900 font-bold'>
+                      title='Refresh' className='active:scale-95 bg-blue-400 hover:bg-blue-500  flex justify-center items-center p-2 w-12 h-12 rounded-md text-slate-900 font-bold'>
                       <FiRefreshCw size={26} />
                     </button>
                   </div>
@@ -106,14 +129,22 @@ const Home: NextPage = () => {
                   </div>
                 </div>
                 <div className={`flex flex-col overflow-hidden transition-all rounded-b-lg p-2 ${opened ? 'h-auto ' : 'h-0 py-0'} bg-[#3c495c]`}>
-                  <Input name='collectionName' placeholder='Collection Name' />
+                  <Input onChange={handleChangeFormData} value={formData['collectionName']} name='collectionName' placeholder='Collection Name' />
+                  <Input onChange={handleChangeFormData} value={formData['ipfs']} name='ipfs' placeholder='IPFS Address (optional)' />
                   <textarea
                     placeholder='Description'
                     className='bg-slate-800 p-2 rounded-md mb-3'
                     rows={3}
+                    name="description"
+                    onChange={handleTextAreaChange}
+                    value={formData['description']}
                   ></textarea>
-                  <Input name='size' placeholder='Size' />
+                  <Input onChange={handleChangeFormData} value={formData['size']} name='size' placeholder='Size' />
                 </div>
+                {err && <div className='flex text-red-500 items-center justify-center mt-8'>
+                  <AiFillWarning size={25} />
+                  <p className=' ml-2'>{err}</p>
+                </div>}
                 <div className='flex justify-center mt-8'>
                   <button
                     disabled={layers.length === 0}

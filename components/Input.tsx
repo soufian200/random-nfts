@@ -2,9 +2,9 @@ type InputType = {
     styles?: string;
     type?: string;
     placeholder: string;
-    value?: string;
+    value?: string | number;
     name: string;
-    onChange: (e: any) => void
+    onChange: (e: any, name: string) => void
 }
 const Input = ({ styles, placeholder, type = "text", value, name, onChange }: InputType) => {
     return <input
@@ -14,7 +14,7 @@ const Input = ({ styles, placeholder, type = "text", value, name, onChange }: In
         name={name}
         className={`
     bg-slate-800 p-3 rounded-md mb-3 ${styles} `}
-        onChange={onChange}
+        onChange={(e) => onChange(e, name)}
     />
 }
 export default Input

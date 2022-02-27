@@ -1,5 +1,5 @@
 import { FiChevronDown, FiChevronUp, FiMove, FiTrash } from 'react-icons/fi'
-import { MdOutlineDragHandle, MdOutlineDragIndicator } from 'react-icons/md'
+import { MdOutlineDragHandle, } from 'react-icons/md'
 import { BsUpload } from 'react-icons/bs'
 import { useContext, useEffect, useRef, useState } from 'react'
 import Trait, { commonStyles } from './Trait'
@@ -117,7 +117,7 @@ const Layer = ({ layer, index, moveCard }: { layer: LayerType, index: number, mo
 
     return <div
 
-        className={`  mb-4  overflow-hidden rounded-lg hover:cursor-move  bg-[#3c495c]  `}
+        className={`  mb-4  overflow-hidden rounded-lg hover:cursor-move group bg-[#3c495c]  `}
 
     >
         <div

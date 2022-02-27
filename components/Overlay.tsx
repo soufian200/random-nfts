@@ -1,13 +1,10 @@
-import Preview from "./Preview";
-import { AiFillCheckCircle, AiOutlineClose, AiOutlineDownload, AiOutlineWarning } from 'react-icons/ai'
+import { AiFillCheckCircle, AiOutlineClose, AiOutlineWarning } from 'react-icons/ai'
 import { FiDownload } from "react-icons/fi";
 import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../context/AppContext";
-import ArtGenerator from "../lib/classes/ArtGenerator";
 
 import { IMGS_DIR, JSON_DIR, METADATA } from '../lib/constants/config'
-import shuffle from "../lib/utils/shuffle";
-const collectionName = 'ha'
+
 
 type OverlayType = {
     setOverlayVisible: (val: boolean) => void
@@ -18,10 +15,10 @@ const Overlay = ({ setOverlayVisible }: OverlayType) => {
     const [done, setDone] = useState(false)
     const [loading, setLoading] = useState(false)
     const [output, setOuput] = useState({})
-    const { layers, generate } = useContext(AppContext)
-    const [count, setCount] = useState(1)
+    const { formData, generate, count } = useContext(AppContext)
 
-    const size = 100
+
+    const { size, collectionName } = formData
 
     /**
       * 
@@ -35,7 +32,7 @@ const Overlay = ({ setOverlayVisible }: OverlayType) => {
         console.log("Downloading...", output)
 
         // return
-        const { images, metadataList, jsonFiles } = output
+        const { images, metadataList, jsonFiles }: any = output
 
         if (loading) return;
         try {
@@ -96,7 +93,7 @@ const Overlay = ({ setOverlayVisible }: OverlayType) => {
                 // intantiate ArtGenerator obj
                 setDone(false)
 
-                const ouputResult = await generate(size)
+                const ouputResult = await generate(Number(size))
 
                 // ===========================================
 
