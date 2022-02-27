@@ -35,7 +35,7 @@ const Layer = ({ layer, index, moveCard }: { layer: LayerType, index: number, mo
         const newLayers = layers.map(i => (i.folderName === layer.folderName) ? { ...i, imgs: [...i.imgs, ...imgs] } : i)
 
         setLayers(newLayers as LayerType[])
-        console.log(newLayers)
+
     }
 
     const handleRemoveLayer = (name: string) => {

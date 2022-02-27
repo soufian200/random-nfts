@@ -18,28 +18,17 @@ const NewLayerForm = ({ setNewLayerFormVisible }: { setNewLayerFormVisible: (pre
     }
 
 
-
-
     /**
      * Add New Layer
      * @returns void
      */
     const handleSave = () => {
 
-        const newLayers = [...layers, { id: getRandomId(), folderName: layerName, imgs: [] }];
-
-        // const parsedLayers = JSON.stringify(newLayers)
-
-        // console.log("parsedLayers: ", parsedLayers)
-
-        // localStorage.setItem(ROOT_DIR, parsedLayers)
-
 
         if (!layerName) return;
 
-
-
-        setLayers([...layers, { id: getRandomId(), folderName: layerName, imgs: [] }])
+        const newLayers = [...layers, { id: getRandomId(), folderName: layerName, imgs: [] }];
+        setLayers(newLayers)
         setNewLayerFormVisible(false)
         setLayerName('')
     }
