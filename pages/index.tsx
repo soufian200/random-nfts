@@ -13,6 +13,7 @@ import { AiFillWarning, AiOutlinePlus } from 'react-icons/ai'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import { Container } from '../components/Container'
+import NewLayerForm from '../components/NewLayerForm'
 
 
 
@@ -21,7 +22,7 @@ const Home: NextPage = () => {
   const [opened, setOpened] = useState(!false)
   const { overlayVisible, setOverlayVisible, layers, setLayers, setRefresh, refresh, formData, setFormData } = useContext(AppContext)
   const [newLayerFormVisible, setNewLayerFormVisible] = useState(false)
-  const [layerName, setLayerName] = useState('')
+
   const [err, setErr] = useState('')
 
 
@@ -30,27 +31,12 @@ const Home: NextPage = () => {
     setRefresh(!refresh)
   }
 
-  const handleNewLayer = () => {
-
-    setNewLayerFormVisible(!newLayerFormVisible)
-  }
 
 
-  const handleSave = () => {
 
-    if (!layerName) return;
 
-    /** @returns random number */
-    const getRandomId = () => Math.floor(Math.random() * 10000);
 
-    setLayers([...layers, { id: getRandomId(), folderName: layerName, imgs: [] }])
-    setNewLayerFormVisible(false)
-    setLayerName('')
-  }
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setLayerName(e.target.value)
-  }
 
   const handleCreate = () => {
     if (!layers.length) return
@@ -80,6 +66,10 @@ const Home: NextPage = () => {
     setFormData({ ...formData, description: e.target.value })
   }
 
+  const handleNewLayer = () => {
+
+    setNewLayerFormVisible((prev: boolean) => !prev)
+  }
 
 
 
@@ -172,21 +162,7 @@ const Home: NextPage = () => {
                 <h1 className='ml-1'>New Layer</h1>
               </div>
               {
-                newLayerFormVisible && <div className={`z-50 transition bg-slate-600 p-2 absolute right-0 top-0 w-[220px] rounded-md shadow-md`}>
-                  <Input
-                    placeholder='Layer Name'
-                    name="layerName"
-                    styles='w-full'
-                    value={layerName}
-                    onChange={handleChange}
-                  />
-                  <button
-                    onClick={handleSave}
-                    className='bg-yellow-400 hover:bg-yellow-500 p-2 py-3 text-slate-900 w-full rounded-md'>Save</button>
-                  <button
-                    onClick={() => setNewLayerFormVisible(false)}
-                    className='bg-slate-200 hover:bg-slate-300 p-2 py-3 text-slate-900 w-full rounded-md mt-1'>Cancel</button>
-                </div>
+                newLayerFormVisible && <NewLayerForm setNewLayerFormVisible={setNewLayerFormVisible} />
               }
             </div>
           </div>

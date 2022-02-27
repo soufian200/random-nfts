@@ -15,7 +15,7 @@ const Overlay = ({ setOverlayVisible }: OverlayType) => {
     const [done, setDone] = useState(false)
     const [loading, setLoading] = useState(false)
     const [output, setOuput] = useState({})
-    const { formData, generate, count } = useContext(AppContext)
+    const { formData, generate, count, setCount } = useContext(AppContext)
 
 
     const { size, collectionName } = formData
@@ -124,7 +124,10 @@ const Overlay = ({ setOverlayVisible }: OverlayType) => {
                 <div className="flex items-center justify-between border-slate-300 border-b p-3">
                     <h1 className="font-bold">Create</h1>
                     <div
-                        onClick={() => setOverlayVisible(false)}
+                        onClick={() => {
+                            setOverlayVisible(false)
+                            setCount(0)
+                        }}
                         className="hover:bg-slate-200 cursor-pointer transition p-2 rounded-full">
                         <AiOutlineClose size={22} />
                     </div>
