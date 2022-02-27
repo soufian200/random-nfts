@@ -1,6 +1,5 @@
-import { ChangeEvent, useContext, useEffect, useState } from "react";
+import { ChangeEvent, useContext, useState } from "react";
 import { AppContext } from "../context/AppContext";
-import { ROOT_DIR } from "../lib/constants/config";
 import Input from "./Input";
 
 /** @returns random number */
@@ -9,7 +8,7 @@ const getRandomId = () => Math.floor(Math.random() * 10000);
 const NewLayerForm = ({ setNewLayerFormVisible }: { setNewLayerFormVisible: (prev: any) => void }) => {
 
     const [layerName, setLayerName] = useState('')
-    let lc: any; // localStorage
+
 
     const { layers, setLayers } = useContext(AppContext)
 
