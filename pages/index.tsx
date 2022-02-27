@@ -3,16 +3,12 @@ import Head from 'next/head'
 import { FiChevronDown, FiChevronUp, FiLayers } from 'react-icons/fi'
 import { FiRefreshCw } from 'react-icons/fi'
 import { ChangeEvent, useContext, useState } from 'react'
-import Layer, { LayerType } from '../components/Layer'
 import Input from '../components/Input'
 import Preview from '../components/Preview'
 import Navbar from '../components/Navbar'
 import Overlay from '../components/Overlay'
 import { AppContext } from '../context/AppContext'
 import { AiFillWarning, AiOutlinePlus } from 'react-icons/ai'
-import { DndProvider } from 'react-dnd'
-import { HTML5Backend } from 'react-dnd-html5-backend'
-import { Container } from '../components/Container'
 import NewLayerForm from '../components/NewLayerForm'
 import LayersContainer from '../components/LayersContainer'
 
@@ -91,8 +87,9 @@ const Home: NextPage = () => {
                 <div>
                   <Preview />
                   <div className='mt-3 flex justify-between  '>
-                    <div className=' flex   '>
-                      <Input onChange={handleChangeInput} value={formData['width']} name='width' placeholder='Width' styles='mb-0 mr-3 w-[80px]' />
+                    <div className=' flex items-center  '>
+                      <Input onChange={handleChangeInput} value={formData['width']} name='width' placeholder='Width' styles='mb-0 w-[80px]' />
+                      <h1 className='mx-1 text-slate-500'>x</h1>
                       <Input onChange={handleChangeInput} value={formData['height']} name='height' placeholder='Height' styles='mb-0 w-[80px]' />
                     </div>
                     <button

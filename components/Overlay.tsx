@@ -1,9 +1,10 @@
-import { AiFillCheckCircle, AiOutlineClose, AiOutlineWarning } from 'react-icons/ai'
+import { AiFillCheckCircle, AiFillWarning, AiOutlineClose, AiOutlineWarning } from 'react-icons/ai'
 import { FiDownload } from "react-icons/fi";
 import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../context/AppContext";
-
+import axios from 'axios';
 import { IMGS_DIR, JSON_DIR, METADATA } from '../lib/constants/config'
+import routes from '../lib/constants/routes';
 
 
 type OverlayType = {
@@ -13,12 +14,33 @@ type OverlayType = {
 const Overlay = ({ setOverlayVisible }: OverlayType) => {
 
     const [done, setDone] = useState(false)
+    const [saved, setSaved] = useState(false)
     const [loading, setLoading] = useState(false)
     const [output, setOuput] = useState({})
+    const [err, setErr] = useState(false)
     const { formData, generate, count, setCount } = useContext(AppContext)
 
 
-    const { size, collectionName } = formData
+    const { size, collectionName, description } = formData
+
+    /**
+   * 
+   * @param _collectionName 
+   * @param _description 
+   * @param _count 
+   * @return if collection saved successfully
+   */
+    const saveCollection = async (_collectionName: string, _description: string, _count: number) => {
+
+        const body = {
+            collectionName: _collectionName,
+            size: _count,
+            description: _description
+        }
+
+        await axios.post(routes.collections + routes.add, body)
+        return true
+    }
 
     /**
       * 
@@ -28,14 +50,15 @@ const Overlay = ({ setOverlayVisible }: OverlayType) => {
       */
     const handleDownload = async () => {
 
+        if (err)
+            setErr(false)
 
-        console.log("Downloading...", output)
 
-        // return
         const { images, metadataList, jsonFiles }: any = output
 
         if (loading) return;
         try {
+
             setLoading(true)
             // Dynamic import JSZip
             const JSZip = (await import('jszip')).default
@@ -59,15 +82,17 @@ const Overlay = ({ setOverlayVisible }: OverlayType) => {
                     setLoading(false)
                 });
 
-            // Save To Firestore
-            // if (saved) return;
+            if (saved) return;
 
-            // const isSaved = await saveCollection(collectionName, description, Number(size));
-            // setSaved(isSaved)
+            const isSaved = await saveCollection(collectionName, description, Number(count));
+            setSaved(isSaved)
         } catch (err) {
             // const Sentry = (await import("@sentry/nextjs")).default
             // Sentry.captureException(err)
-            console.log(err)
+            // console.log(err)
+
+            setErr(true)
+
             setLoading(false)
         }
     }
@@ -87,6 +112,8 @@ const Overlay = ({ setOverlayVisible }: OverlayType) => {
         const handleGenerate = async () => {
 
             try {
+                if (err)
+                    setErr(false)
 
                 setDone(false)
 
@@ -98,10 +125,12 @@ const Overlay = ({ setOverlayVisible }: OverlayType) => {
             } catch (err) {
                 // const Sentry = (await import("@sentry/nextjs")).default
                 // Sentry.captureException(err)
+                // console.log(err)
+                setErr(true)
 
-                console.log(err)
             }
         }
+
         if (!Object.keys(output).length)
             handleGenerate()
 
@@ -124,13 +153,19 @@ const Overlay = ({ setOverlayVisible }: OverlayType) => {
                 <div className="p-8 flex justify-center items-center flex-col ">
 
                     <div className="relative w-[240px] h-[240px] flex justify-center items-center">
-                        <div className={`absolute border-4 border-b-0 border-t-0 ${!done && 'animate-spin'} border-blue-400 top-0 left-0 w-full h-full  rounded-full`}></div>
-                        <h1 className="text-7xl">{count}</h1>
+                        {err ?
+                            <div className='text-red-500' ><AiFillWarning size={160} /></div>
+                            : <>  <div className={`absolute border-4 border-b-0 border-t-0 ${!done && 'animate-spin'} border-blue-400 top-0 left-0 w-full h-full  rounded-full`}></div>
+                                <h1 className="text-7xl">{count}</h1></>}
                     </div>
                     <div className="  mt-10">
-                        {
-                            !done
-                                ? <h1 className="font-bold ">Generating...</h1>
+
+                        {err
+                            ? <div className=' mt-10'>
+                                <h1 className='text-red-500 text-center'>Something Went Wrong!. Please Try Again</h1>
+                            </div>
+                            : !done
+                                ? <h1 className="font-bold text-center ">Generating...</h1>
                                 : <div className="flex flex-col items-center">
                                     {
                                         count < size && <div className="flex rounded-xl  items-center bg-orange-100 text-orange-500 p-4 mb-5">
@@ -140,7 +175,7 @@ const Overlay = ({ setOverlayVisible }: OverlayType) => {
                                     }
                                     <div className="flex  rounded-xl items-center bg-green-100 text-green-500 p-4 mb-5">
                                         <AiFillCheckCircle size={28} />
-                                        <p className="ml-3">Done Sucessfully.</p>
+                                        <p className="ml-3">Done Successfully.</p>
                                     </div>
                                     <button
                                         onClick={handleDownload}
@@ -158,6 +193,7 @@ const Overlay = ({ setOverlayVisible }: OverlayType) => {
                                     </button>
                                 </div>
                         }
+
                     </div>
                 </div>
 

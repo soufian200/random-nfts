@@ -24,7 +24,7 @@ const Preview = () => {
 
     return <div>
         <h1 className="text-slate-500 mb-1">Preview</h1>
-        <div className='bg-slate-500 h-[340px] w-[340px] rounded-md flex-none overflow-hidden'>
+        <div className='bg-slate-500 md:h-[280px] md:w-[280px] lg:h-[340px] lg:w-[340px] xl:h-[400px] xl:w-[400px] rounded-md flex-none overflow-hidden'>
             {
                 url ? <Image
                     alt="Preview"
