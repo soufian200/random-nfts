@@ -50,8 +50,6 @@ const Overlay = ({ setOverlayVisible }: OverlayType) => {
       */
     const handleDownload = async () => {
 
-        if (err)
-            setErr(false)
 
 
         const { images, metadataList, jsonFiles }: any = output
@@ -89,9 +87,9 @@ const Overlay = ({ setOverlayVisible }: OverlayType) => {
         } catch (err) {
             // const Sentry = (await import("@sentry/nextjs")).default
             // Sentry.captureException(err)
-            // console.log(err)
+            console.log(err)
 
-            setErr(true)
+
 
             setLoading(false)
         }
