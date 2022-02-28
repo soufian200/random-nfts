@@ -4,9 +4,8 @@ import requestIp from 'request-ip'
 import { getRandomNumber } from '../../../services/firebase/utils/getRandomNumber';
 
 type Data = {
+    success: boolean
     err?: string
-    msg?: string
-    payload?: any
 }
 
 async function handler(
@@ -14,7 +13,7 @@ async function handler(
     res: NextApiResponse<Data>
 ) {
     // Prevent GET method
-    if (req.method === 'GET') return res.status(405).json({ err: 'method not allowed' })
+    if (req.method === 'GET') return res.status(405).json({ success: false, err: 'method not allowed' })
 
     const { collectionName, size, description } = req.body;
     // Detected user IP
@@ -60,13 +59,7 @@ async function handler(
     db.collection("stats").doc("collections").set({ count: newCount + size })
 
     res.status(200).json({
-        msg: `${collectionName} collection generated with ${size} assets`,
-        payload: {
-            collectionName: data.collectionName,
-            size: data.size,
-            createdAt: data.createdAt,
-            description: data.description
-        }
+        success: true
     })
 }
 export default handler;

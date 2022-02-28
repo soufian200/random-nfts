@@ -38,11 +38,7 @@ const Overlay = ({ setOverlayVisible }: OverlayType) => {
             description: _description
         }
 
-        await axios.post(routes.collections + routes.add, body, {
-            headers: {
-                'Access-Control-Allow-Origin': '*',
-            },
-        })
+        await axios.post(routes.collections + routes.add, body)
         return true
     }
 
