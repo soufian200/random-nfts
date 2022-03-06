@@ -1,20 +1,37 @@
 import { NextApiRequest, NextApiResponse } from "next";
+import db from "../../services/firebase/db";
 
 type Data = {
-    success: boolean
     err?: string
-    payload: any
+    payload?: any
+}
+
+/**
+ * Get Count From All Stats
+ * */
+const getCount = async (statsDoc: FirebaseFirestore.CollectionReference<FirebaseFirestore.DocumentData>, docName: string) => {
+    const collectionsDoc = statsDoc.doc(docName)
+    const statsData = await collectionsDoc.get()
+
+    return statsData.data()?.count || 0
 }
 
 async function handler(
     req: NextApiRequest,
     res: NextApiResponse<Data>
 ) {
+    // Only GET method Allowed
+    if (req.method !== 'GET') return res.status(405).json({ err: 'method not allowed' })
+
+    const statsDoc = db.collection("stats")
+    const collectionsCount = await getCount(statsDoc, 'collections');
+    const usersCount = await getCount(statsDoc, 'users');
+
+
     return res.status(200).json({
-        success: true,
         payload: {
-            user: 20313,
-            collections: 4230223
+            users: usersCount,
+            collections: collectionsCount
         }
     })
 }

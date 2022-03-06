@@ -5,6 +5,8 @@ const routes = {
     collections: "/collections",
     add: "/add",
 
+    stats: "/status",
+
     // Sign up
     ABSOLUTE: "/",
 

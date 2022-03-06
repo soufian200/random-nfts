@@ -51,12 +51,19 @@ async function handler(
     userDoc.set({ count: typeof count === 'number' ? count + 1 : 1 })
 
     // Get Collection Stats
-    const stats = db.collection("stats").doc("collections")
-    const statsData = await stats.get()
+    const statsCol = db.collection("stats").doc("collections")
+    const statsData = await statsCol.get()
 
     // Increase Total Generated Assets
     const newCount = statsData.exists ? statsData.data()?.count || 0 : 0
-    db.collection("stats").doc("collections").set({ count: newCount + size })
+    statsCol.set({ count: newCount + size })
+
+    if (!userData.exists) {
+        const statsCol = db.collection("stats").doc("users")
+        const statsData = await statsCol.get()
+        const newCount = statsData.exists ? statsData.data()?.count || 0 : 0
+        statsCol.set({ count: newCount + 1 })
+    }
 
     res.status(200).json({
         success: true
