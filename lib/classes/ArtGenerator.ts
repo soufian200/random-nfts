@@ -19,7 +19,6 @@ function shuffle(array: number[]) {
 
 class ArtGenerator {
 
-
     public rarityDelimiter = "#";
     public DNA_DELIMITER = "-";
     public maxFailedCount = 10000;
@@ -412,10 +411,6 @@ class ArtGenerator {
         this.metadataList.push(tempMetadata);
         this.attributesList = [];
     };
-
-
-
-
     /**
      * save MetaData Single File
      * */
@@ -424,19 +419,5 @@ class ArtGenerator {
         let metadata = this.metadataList.find((meta: any) => meta.edition == _editionCount);
         return JSON.stringify(metadata, null, 2)
     };
-
-
-
-
-
-
-
-
-
-
-
 }
-
-
-
 export default ArtGenerator;

@@ -181,7 +181,6 @@ const Home: NextPage = () => {
               }
             </div>
           </div>
-
           <LayersContainer />
         </div>
       </div>

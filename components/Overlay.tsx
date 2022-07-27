@@ -5,11 +5,14 @@ import { AppContext } from "../context/AppContext";
 import axios from 'axios';
 import { IMGS_DIR, JSON_DIR, METADATA } from '../lib/constants/config'
 import routes from '../lib/constants/routes';
-
+import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 
 type OverlayType = {
     setOverlayVisible: (val: boolean) => void
 }
+
+const amount = 2;
+const maxFreeTrial = 50;
 
 const Overlay = ({ setOverlayVisible }: OverlayType) => {
 
@@ -19,8 +22,10 @@ const Overlay = ({ setOverlayVisible }: OverlayType) => {
     const [output, setOuput] = useState({})
     const [err, setErr] = useState(false)
     const { formData, generate, count, setCount } = useContext(AppContext)
-
-
+    const [showPayMsg, setShowPayMsg] = useState(false)
+    const [success, setSuccess] = useState(false);
+    const [orderID, setOrderID] = useState(false);
+    const [paypalErrorMessage, setPaypalErrorMessage] = useState('')
     const { size, collectionName, description } = formData
 
     /**
@@ -50,7 +55,8 @@ const Overlay = ({ setOverlayVisible }: OverlayType) => {
       */
     const handleDownload = async () => {
 
-
+        // check payment
+        if (!success && count > maxFreeTrial) return setShowPayMsg(true);
 
         const { images, metadataList, jsonFiles }: any = output
 
@@ -88,17 +94,58 @@ const Overlay = ({ setOverlayVisible }: OverlayType) => {
             // const Sentry = (await import("@sentry/nextjs")).default
             // Sentry.captureException(err)
             console.log(err)
-
-
-
             setLoading(false)
         }
     }
 
+    /**
+     * 
+     * creates a paypal order
+     */
+    const createOrder = (data: any, actions: any) => {
+        return actions.order
+            .create({
+                purchase_units: [
+                    {
+                        description: `nfts generator - ${collectionName} collection`,
+                        amount: { currency_code: "USD", value: amount, },
+                    },
+                ],
+                application_context: {
+                    shipping_preference: "NO_SHIPPING",
+                },
+            })
+            .then((orderID: any) => {
+                setOrderID(orderID);
+                return orderID;
+            });
+    };
 
+    /**
+     * 
+     * check Approval
+     */
+    const onApprove = (data: any, actions: any) => {
+        return actions.order.capture().then(function (details: any) {
+            const { payer } = details;
+            setSuccess(true);
 
+        });
+    };
 
+    useEffect(() => {
+        setShowPayMsg(false)
+        handleDownload()
+    }, [success])
 
+    /**
+     * 
+     * capture likely error
+     */
+
+    const onError = (err: any) => {
+        setPaypalErrorMessage("An Error occured with your payment.");
+    };
 
     useEffect(() => {
 
@@ -134,6 +181,7 @@ const Overlay = ({ setOverlayVisible }: OverlayType) => {
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
+
     return <div className="bg-[#222222ef]  fixed w-screen h-screen top-0 left-0 z-50 flex justify-center items-center">
         <div className="bg-slate-50 rounded-xl shadow-2xl w-[600px] " >
             <div>
@@ -149,13 +197,13 @@ const Overlay = ({ setOverlayVisible }: OverlayType) => {
                     </div>
                 </div>
                 <div className="p-8 flex justify-center items-center flex-col ">
-
                     <div className="relative w-[240px] h-[240px] flex justify-center items-center">
                         {err ?
                             <div className='text-red-500' ><AiFillWarning size={160} /></div>
                             : <>  <div className={`absolute border-4 border-b-0 border-t-0 ${!done && 'animate-spin'} border-blue-400 top-0 left-0 w-full h-full  rounded-full`}></div>
                                 <h1 className="text-7xl">{count}</h1></>}
                     </div>
+
                     <div className="  mt-10">
 
                         {err
@@ -177,7 +225,7 @@ const Overlay = ({ setOverlayVisible }: OverlayType) => {
                                     </div>
                                     <button
                                         onClick={handleDownload}
-                                        className={` ${loading ? "pointer-events-none bg-green-200" : "pointer-events-auto bg-green-400"}   flex justify-center items-center hover:bg-green-500 py-3 px-20 rounded-md text-slate-900 font-bold`}>
+                                        className={`${loading ? "pointer-events-none bg-green-200" : "pointer-events-auto bg-green-400"}   flex justify-center items-center hover:bg-green-500 py-3 px-20 rounded-md text-slate-900 font-bold`}>
                                         {loading
                                             ? <>
                                                 <h1 className="ml-2">Downloading...</h1>
@@ -189,6 +237,23 @@ const Overlay = ({ setOverlayVisible }: OverlayType) => {
                                             </>
                                         }
                                     </button>
+
+                                    {count > maxFreeTrial && !success && <div className='mt-4'>
+                                        <p className='font-bold text-center mb-2'>Cost: {amount}$</p>
+                                        <PayPalScriptProvider options={{ "client-id": process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID as string }}>
+                                            <PayPalButtons
+                                                style={{ layout: "horizontal" }}
+                                                createOrder={createOrder}
+                                                onApprove={onApprove}
+                                                onError={onError}
+                                            />
+                                        </PayPalScriptProvider>
+                                    </div>
+                                    }
+                                    {success && <p className='text-red-500 mt-4 text-center' > 🚩 Don't reload this page or you will lose your collection and you will have to pay again 🚩</p>}
+                                    {count > maxFreeTrial && <p className='text-amber-500 mt-4' ><b>⭐ Free Trial ⭐:</b> Make collection's size less than {maxFreeTrial}</p>}
+                                    {showPayMsg && count > maxFreeTrial && <p className='text-red-500 mt-4' >🔴 Please pay {amount}$ to download the collection</p>}
+                                    {paypalErrorMessage && count > maxFreeTrial && <p className='text-red-500 mt-4' >{paypalErrorMessage}</p>}
                                 </div>
                         }
 

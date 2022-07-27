@@ -27,7 +27,7 @@ async function handler(
     const collectionsCount = await getCount(statsDoc, 'collections');
     const usersCount = await getCount(statsDoc, 'users');
 
-
+    res.setHeader('Access-Control-Allow-Origin', '*');
     return res.status(200).json({
         payload: {
             users: usersCount,

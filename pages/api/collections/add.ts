@@ -65,6 +65,8 @@ async function handler(
         statsCol.set({ count: newCount + 1 })
     }
 
+    res.setHeader('Access-Control-Allow-Origin', '*');
+
     res.status(200).json({
         success: true
     })
