@@ -250,8 +250,8 @@ const Overlay = ({ setOverlayVisible }: OverlayType) => {
                                         </PayPalScriptProvider>
                                     </div>
                                     }
-                                    {success && <p className='text-red-500 mt-4 text-center' > 🚩 Don't reload this page or you will lose your collection and you will have to pay again 🚩</p>}
-                                    {count > maxFreeTrial && <p className='text-amber-500 mt-4' ><b>⭐ Free Trial ⭐:</b> Make collection's size less than {maxFreeTrial}</p>}
+                                    {success && <p className='text-red-500 mt-4 text-center' > 🚩 Don&apos;t reload this page or you will lose your collection and you will have to pay again 🚩</p>}
+                                    {count > maxFreeTrial && <p className='text-amber-500 mt-4' ><b>⭐ Free Trial ⭐:</b> Make collection&apos;s size less than {maxFreeTrial}</p>}
                                     {showPayMsg && count > maxFreeTrial && <p className='text-red-500 mt-4' >🔴 Please pay {amount}$ to download the collection</p>}
                                     {paypalErrorMessage && count > maxFreeTrial && <p className='text-red-500 mt-4' >{paypalErrorMessage}</p>}
                                 </div>
