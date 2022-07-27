@@ -86,10 +86,11 @@ const Overlay = ({ setOverlayVisible }: OverlayType) => {
                     setLoading(false)
                 });
 
-            if (saved) return;
+            /** Prevent To Store Collection count to firestore */
+            // if (saved) return;
+            // const isSaved = await saveCollection(collectionName, description, Number(count));
+            // setSaved(isSaved)
 
-            const isSaved = await saveCollection(collectionName, description, Number(count));
-            setSaved(isSaved)
         } catch (err) {
             // const Sentry = (await import("@sentry/nextjs")).default
             // Sentry.captureException(err)
